@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct ContactExplorerApp: App {
+struct ContactManagerApp: App {
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {

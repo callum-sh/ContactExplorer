@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F244C79E2D6A64A60059FDD2 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F244C79D2D6A64A60059FDD2 /* Contacts.framework */; };
+		F244C7AC2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F244C7802D6A64650059FDD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		F244C76A2D6A64630059FDD2 /* ContactExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F244C77F2D6A64650059FDD2 /* ContactExplorerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactExplorerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F244C7892D6A64650059FDD2 /* ContactExplorerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactExplorerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F244C79D2D6A64A60059FDD2 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ContactsModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F244C79E2D6A64A60059FDD2 /* Contacts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,9 +83,11 @@
 		F244C7612D6A64630059FDD2 = {
 			isa = PBXGroup;
 			children = (
+				F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */,
 				F244C76C2D6A64630059FDD2 /* ContactExplorer */,
 				F244C7822D6A64650059FDD2 /* ContactExplorerTests */,
 				F244C78C2D6A64650059FDD2 /* ContactExplorerUITests */,
+				F244C79C2D6A64A60059FDD2 /* Frameworks */,
 				F244C76B2D6A64630059FDD2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +100,14 @@
 				F244C7892D6A64650059FDD2 /* ContactExplorerUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F244C79C2D6A64A60059FDD2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F244C79D2D6A64A60059FDD2 /* Contacts.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F244C7AC2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +418,9 @@
 				DEVELOPMENT_TEAM = 4927QG34AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts so you can edit and add extra information.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to record speech for notes.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to transcribe notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +450,9 @@
 				DEVELOPMENT_TEAM = 4927QG34AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts so you can edit and add extra information.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to record speech for notes.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to transcribe notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +583,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */,
+			);
+			currentVersion = F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */;
+			path = ContactsModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F244C7622D6A64630059FDD2 /* Project object */;
 }
