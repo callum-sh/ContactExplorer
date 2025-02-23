@@ -16,11 +16,11 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-//            HomeView()
-            ContactsView()
+            HomeView()
         }
     }
 }
+
 
 #Preview {
     ContentView()
