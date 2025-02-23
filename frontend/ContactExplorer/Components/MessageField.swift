@@ -9,12 +9,15 @@ import SwiftUI
 
 struct MessageField: View {
     @State private var message = ""
+    var onSend: (String) -> Void
+
     var body: some View {
-        HStack{
-            CustomTextField(placeholder: Text("or type here to chat"), text:$message)
-            
-            Button{
-                print("Message sent!")
+        HStack {
+            CustomTextField(placeholder: Text("or type here to chat"), text: $message)
+
+            Button {
+                guard !message.isEmpty else { return }
+                onSend(message)
                 message = ""
             } label: {
                 Image(systemName: "paperplane.fill")
@@ -28,13 +31,11 @@ struct MessageField: View {
         .padding(10)
         .background(Color("Gray"))
         .cornerRadius(20)
-        
-        
     }
 }
 
 #Preview {
-    MessageField()
+    MessageField { _ in }
 }
 
 struct CustomTextField: View {

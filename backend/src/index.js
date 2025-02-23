@@ -52,7 +52,7 @@ app.post('/query', async (req, res) => {
     }
 
     // TODO: do more dynamic 
-    const isTask = query.includes('remind') || query.includes('schedule');
+    const isTask = query.toLowerCase().includes('remind') || query.toLowerCase().includes('schedule');
 
     // create task with 1 sentence summary of query
     if (isTask) {
@@ -122,7 +122,36 @@ app.post('/query', async (req, res) => {
           [summary, dynamicDate]
         );
         console.log('Saved task:', result.rows[0]);
-        return res.json(result.rows[0]);
+
+        // add summary of creating task to response
+        const taskCreationPrompt = `
+        Give me a concise summary of the task you just created.
+        Task: "${summary}"
+        `;
+        const taskCreationResponse = await axios.post(
+          'https://api.cohere.ai/generate',
+          {
+            model: 'command-xlarge-nightly',
+            prompt: taskCreationPrompt,
+            max_tokens: 20,
+            temperature: 0.7,
+            k: 0,
+            p: 0.75,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+            stop_sequences: []
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const taskSummary = taskCreationResponse.data.text.trim();
+        console.log('Task summary:', taskSummary);
+
+        return res.json({ isTask: true, task: result.rows[0], summary: taskSummary });
       } catch (error) {
         console.error('Error generating task summary:', error.response?.data || error);
         return res.status(500).json({ error: 'Error generating task summary' });
@@ -137,7 +166,46 @@ app.post('/query', async (req, res) => {
       // fit description to { name, email, company, notes, meta }
       const { name, email, company, notes, meta } = await generateContactDescription(query);
       const newContact = await createAndEmbedContact(name, email, company, notes, meta);
-      return res.json({ isNewContact: true, contact: newContact });
+
+      // create summary of new contact
+      const prompt = `
+      Given the following contact details, generate an EXTREMELY CONCISEsummary that highlights key information:
+      Name: ${name}
+      Email: ${email}
+      Company: ${company}
+      Notes: ${notes}
+      Additional Info: ${meta || ''}
+      Query: ${query}
+      `.trim();
+
+      const summaryResponse = await axios.post(
+        'https://api.cohere.ai/generate',
+        {
+          model: 'command-xlarge-nightly',
+          prompt: prompt,
+          max_tokens: 20,
+          temperature: 0.7,
+          k: 0,
+          p: 0.75,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+          stop_sequences: []
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log('Summary response:', summaryResponse.data);
+      const summary = summaryResponse.data.text.trim();
+
+      res.json({
+        isNewContact: true,
+        contact: newContact.rows[0],
+        summary
+      });
     }
 
     // not new contact; query existing contacts for best match

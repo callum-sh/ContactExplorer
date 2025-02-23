@@ -11,9 +11,13 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = ContactsViewModel()
+    @ObservedObject private var postQuery = PostQuery()
     
     @State private var isEditing = false
     @State private var messageText = ""
+    
+    @State private var displayedResponse = ""
+    @State private var showResponse = false
     
     var body: some View {
         ZStack {
@@ -61,6 +65,19 @@ struct HomeView: View {
                 .frame(width: UIScreen.main.bounds.width)
                 .padding(.trailing, 40)
                 
+                // display most recent response from query
+                if showResponse {
+                    ScrollView {
+                        Text(displayedResponse)
+                            .font(.custom("HelveticaNeue-Light", size: 34))
+                            .frame(width: 362, alignment: .leading)
+                            .padding()
+                            .animation(.easeInOut(duration: 0.05), value: displayedResponse)
+                    }
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
+                
                 Spacer()
                 
                 
@@ -72,7 +89,11 @@ struct HomeView: View {
                         .shadow(color: .gray, radius: 5, x: 0, y: 5)
                         .ignoresSafeArea()
                     
-                    MessageField()
+                    MessageField(onSend: { message in
+                        postQuery.sendQuery(message) { response in
+                            showResponseWithTypingAnimation(response)
+                        }
+                    })
                         .padding(.top, 20)
                         
                     
@@ -84,6 +105,29 @@ struct HomeView: View {
 //        .onAppear {
 //            viewModel.fetchContacts()
 //        }
+    }
+    
+    private func showResponseWithTypingAnimation(_ fullText: String) {
+        displayedResponse = ""
+        showResponse = true
+
+        let characters = Array(fullText)
+        var index = 0
+
+        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+            if index < characters.count {
+                displayedResponse.append(characters[index])
+                index += 1
+            } else {
+                timer.invalidate()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    withAnimation {
+                        showResponse = false
+                    }
+                }
+            }
+        }
     }
 }
 
