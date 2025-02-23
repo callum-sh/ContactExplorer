@@ -10,16 +10,17 @@ import SwiftUI
 
 
 struct HomeView: View {
+    @StateObject private var viewModelChat = GetChats()
     @StateObject private var viewModel = ContactsViewModel()
     @ObservedObject private var postQuery = PostQuery()
     
-    @State private var isEditing = false
-    @State private var messageText = ""
+    @State private var activeTab: TabModel = .chat
     
     @State private var displayedResponse = ""
     @State private var showResponse = false
     
     var body: some View {
+        
         ZStack {
             
             //background orb
@@ -34,7 +35,7 @@ struct HomeView: View {
             
             // Overlay layer
             Rectangle()
-                .fill(.white.opacity(0.2))
+                .fill(.white.opacity(0.4))
                 .ignoresSafeArea()
             
             Rectangle()
@@ -44,7 +45,12 @@ struct HomeView: View {
             //content layer
             VStack{
                 HStack{
-                    Spacer()
+                    HStack{
+                        ToggleView(activeTab: $activeTab)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 20)
+                    
                     HStack(spacing: 18){
                         NavigationLink(destination: TasksView()) {
                             Image(systemName: "bell.fill")
@@ -60,45 +66,63 @@ struct HomeView: View {
                             .resizable()
                             .frame(width:50, height:50)
                     }
-
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 20)
                 }
                 .frame(width: UIScreen.main.bounds.width)
-                .padding(.trailing, 40)
                 
-                // display most recent response from query
-                if showResponse {
-                    ScrollView {
-                        Text(displayedResponse)
-                            .font(.custom("HelveticaNeue-Light", size: 34))
-                            .frame(width: 362, alignment: .leading)
-                            .padding()
-                            .animation(.easeInOut(duration: 0.05), value: displayedResponse)
-                    }
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                }
-                
-                
-                Spacer()
-                
-                
-                ZStack{
-                    // Background rectangle
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.white)
-                        .offset(y:40)
-                        .shadow(color: .gray, radius: 5, x: 0, y: 5)
-                        .ignoresSafeArea()
+                if (activeTab == .chat) {
+                    Spacer()
                     
-                    MessageField(onSend: { message in
-                        postQuery.sendQuery(message) { response in
-                            showResponseWithTypingAnimation(response)
+                    // display most recent response from query
+                    if showResponse {
+                        ScrollView {
+                            Text(displayedResponse)
+                                .font(.custom("HelveticaNeue-Light", size: 34))
+                                .frame(width: 362, alignment: .leading)
+                                .padding()
+                                .animation(.easeInOut(duration: 0.05), value: displayedResponse)
                         }
-                    })
-                        .padding(.top, 20)
-                        
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
                     
+                    ZStack{
+                        // Background rectangle
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.white)
+                            .offset(y:40)
+                            .shadow(color: .gray, radius: 5, x: 0, y: 5)
+                            .ignoresSafeArea()
+                        
+                        MessageField(onSend: { message in
+                            postQuery.sendQuery(message) { response in
+                                showResponseWithTypingAnimation(response)
+                            }
+                        })
+                        .padding(.top, 20)
+                    }
+                    .frame(width:UIScreen.main.bounds.width, height: 120)
+                } else {
+                    
+                    Spacer()
+                    
+                    ZStack{
+                        VStack {
+                            // The list of items
+                            ScrollView {
+                                VStack(spacing: 12) {
+                                    ForEach(viewModelChat.chats) { chat in
+                                        ChatCardView(chatItem: chat)
+                                    }
+                                }
+                                .padding(.top, 10)
+                            }
+                        }
+                    }
                 }
-                .frame(width:UIScreen.main.bounds.width, height: 120)
+            }
+            .onAppear {
+                viewModelChat.fetchChats()
             }
         }
 //        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
