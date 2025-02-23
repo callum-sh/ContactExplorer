@@ -12,6 +12,8 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FocusState private var isSearchFieldFocused: Bool // Add focus state for better keyboard control
     
+   
+    
     
     
     var body: some View {

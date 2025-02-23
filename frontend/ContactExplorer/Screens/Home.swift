@@ -10,12 +10,12 @@ import SwiftUI
 
 
 struct HomeView: View {
-    @StateObject private var viewModel = ContactsViewModel()
+    @StateObject private var viewModel = GetChatItems()
     
-    @State private var isEditing = false
-    @State private var messageText = ""
+    @State private var activeTab: TabModel = .chat
     
     var body: some View {
+        
         ZStack {
             
             //background orb
@@ -30,7 +30,7 @@ struct HomeView: View {
             
             // Overlay layer
             Rectangle()
-                .fill(.white.opacity(0.2))
+                .fill(.white.opacity(0.4))
                 .ignoresSafeArea()
             
             Rectangle()
@@ -40,7 +40,12 @@ struct HomeView: View {
             //content layer
             VStack{
                 HStack{
-                    Spacer()
+                    HStack{
+                        ToggleView(activeTab: $activeTab)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 20)
+                    
                     HStack(spacing: 18){
                         Image("croppedpfp")
                             .resizable()
@@ -50,34 +55,52 @@ struct HomeView: View {
                             .resizable()
                             .frame(width:50, height:50)
                     }
-
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 20)
                 }
                 .frame(width: UIScreen.main.bounds.width)
-                .padding(.trailing, 40)
                 
-                Spacer()
-                
-                
-                ZStack{
-                    // Background rectangle
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.white)
-                        .offset(y:40)
-                        .shadow(color: .gray, radius: 5, x: 0, y: 5)
-                        .ignoresSafeArea()
+                if activeTab == .chat {
+                    Spacer()
                     
-                    MessageField()
-                        .padding(.top, 20)
+                    
+                    ZStack{
+                        // Background rectangle
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.white)
+                            .offset(y:40)
+                            .shadow(color: .gray, radius: 5, x: 0, y: 5)
+                            .ignoresSafeArea()
                         
+                        MessageField()
+                            .padding(.top, 20)
+                            
+                        
+                    }
+                    .frame(width:UIScreen.main.bounds.width, height: 120)
+                } else {
                     
+                    Spacer()
+                    
+                    ZStack{
+                        VStack {
+                            // The list of items
+                            ScrollView {
+                                VStack(spacing: 12) {
+                                    ForEach(viewModel.chats) { chat in
+                                        ChatCardView(chatItem: chat)
+                                    }
+                                }
+                                .padding(.top, 10)
+                            }
+                        }
+                    }
                 }
-                .frame(width:UIScreen.main.bounds.width, height: 120)
+            }
+            .onAppear {
+                viewModel.fetchChats()
             }
         }
-//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD 
-//        .onAppear {
-//            viewModel.fetchContacts()
-//        }
     }
 }
 

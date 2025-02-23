@@ -50,5 +50,5 @@ struct ChatCardView: View {
 }
 
 #Preview {
-    ContactsView()
+    ContentView()
 }
