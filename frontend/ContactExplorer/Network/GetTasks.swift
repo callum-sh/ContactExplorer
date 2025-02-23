@@ -9,9 +9,9 @@ import Foundation
 
 class GetTasks: ObservableObject {
     @Published var tasks: [Task] = []
-    private let apiURL = "https://d486-67-245-209-108.ngrok-free.app/recentTasks"
+    private let apiURL = "https://d486-67-245-209-108.ngrok-free.app/upcomingTasks"
     
-    func fetchChats() {
+    func fetchTasks() {
         guard let url = URL(string: apiURL) else { return }
         
         URLSession.shared.dataTask(with: url) { data, response, error in

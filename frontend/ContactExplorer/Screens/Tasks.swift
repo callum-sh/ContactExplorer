@@ -74,7 +74,7 @@ struct TasksView: View {
             }
         }
         .onAppear {
-            viewModel.fetchChats()
+            viewModel.fetchTasks()
         }
     }
 }

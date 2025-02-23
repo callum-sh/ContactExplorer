@@ -4,27 +4,31 @@
 //
 //  Created by callum on 2025-02-23.
 //
-
 import SwiftUI
 
 struct TaskCardView: View {
     let taskItem: Task
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            
-            // Day
-            Text(formattedDate(taskItem.date))
-                .font(.custom("HelveticaNeue-Light", size: 17))
-                .foregroundColor(.secondary)                
 
-            // Task Description
+    var body: some View {
+        HStack(spacing: 16) {
+            
+            // date
+            VStack {
+                Text(formattedMonth(taskItem.date))
+                    .font(.caption)
+                
+                Text(formattedDay(taskItem.date))
+                    .font(.largeTitle)
+                    .bold()
+            }
+            .frame(width: 50)
+
+            // task
             Text(taskItem.task)
                 .font(.body)
-                .foregroundColor(.primary)
-                .font(.custom("NewYork-Regular", size: 17)) // todo: font not working
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(30)
+        .padding(20)
         .frame(width: 362, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 30)
@@ -32,23 +36,33 @@ struct TaskCardView: View {
                 .foregroundColor(Color(UIColor.secondarySystemBackground))
         )
     }
-    
-    private func formattedDate(_ dateString: String) -> String {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-        // String → Date
-        if let date = isoFormatter.date(from: dateString) {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
-            return formatter.string(from: date)
-        } else {
-            return "N/A"
-        }
+
+    private func formattedMonth(_ dateString: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        guard let date = formatter.date(from: dateString) else { return "N/A" }
+
+        formatter.dateFormat = "MMM" // e.g., "Feb"
+        return formatter.string(from: date)
+    }
+
+    private func formattedDay(_ dateString: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        guard let date = formatter.date(from: dateString) else { return "N/A" }
+
+        formatter.dateFormat = "d" // e.g., "23"
+        return formatter.string(from: date)
     }
 }
 
 #Preview {
-    TasksView()
+    let sampleTask = Task(
+        id: 1,
+        date: "2025-02-23T07:02:17.107Z",
+        task: "Meeting with Harvin to align on project details."
+    )
+
+    TaskCardView(taskItem: sampleTask)
 }
