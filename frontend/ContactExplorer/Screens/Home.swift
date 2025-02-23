@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject private var viewModel = ContactsViewModel()
     
     @State private var isEditing = false
     @State private var messageText = ""
@@ -80,11 +81,12 @@ struct HomeView: View {
                             }
                     }
                 }
-                
-                
-                
             }
         }
+//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD 
+//        .onAppear {
+//            viewModel.fetchContacts()
+//        }
     }
 }
 

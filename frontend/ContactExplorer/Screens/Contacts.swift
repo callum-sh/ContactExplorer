@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct ContactsView: View {
-    @StateObject private var viewModel = ChatViewModel()
+    @StateObject private var viewModel = GetChatItems()
     
     var body: some View {
         ZStack {

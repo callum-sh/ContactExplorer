@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ChatViewModel: ObservableObject {
+class GetChatItems: ObservableObject {
     @Published var chats: [ChatItem] = []
     private let apiURL = "https://d486-67-245-209-108.ngrok-free.app/recentQueries"
     

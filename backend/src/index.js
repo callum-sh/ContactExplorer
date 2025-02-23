@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
  */
 app.post('/embedContact', async (req, res) => {
     const { name, email, company, notes, meta } = req.body;
+    console.log(`embedding contact: ${name}, ${email}, ${company}, ${notes}, ${meta}`);
 
     try {
         // create embedding for given contact 
