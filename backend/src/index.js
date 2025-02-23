@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send("Hello from Express!"); 
+    res.send("Hello from Tether"); 
 });
 
 
@@ -31,6 +31,7 @@ app.post('/embedContact', async (req, res) => {
         res.status(500).json({ error: 'Error embedding contact' });
     }
 });
+
 
 /**
  * Query embedding space for contact best matching query 
@@ -92,12 +93,41 @@ app.post('/queryContact', async (req, res) => {
         if (!bestMatch) {
           return res.status(404).json({ error: 'No matching contact found' });
         }
-    
-        // TODO: call llm to gen better summary 
-        const prompt = `Given the following contact details, generate a spoken summary that highlights key information:
+
+        // derive and update contact notes to include new information provided in the query, if necessary 
+        const queryNewInfo = await axios.post('https://api.cohere.ai/generate', {
+            model: 'command-xlarge-nightly',
+            prompt: `Given the following contact details, extract any new information from the query about the person of person in question:
             Name: ${bestMatch.name}
             Company: ${bestMatch.company}
             Notes: ${bestMatch.notes}
+
+            Query: ${query}. IF THERE IS NOT ANY GOOD NEW INFORMATION ONLY FROM THE QUERY, RETURN AN EMPTY STRING`.trim(),
+            max_tokens: 100,
+            temperature: 0.3,
+            stop_sequences: []
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        let newNotes = bestMatch.notes;
+        if (queryNewInfo.data.text.trim() !== '') {
+           newNotes += queryNewInfo.data.text.trim();
+        }
+
+        await pool.query(
+          'UPDATE contacts SET notes = $1 WHERE id = $2',
+          [newNotes, bestMatch.id]
+        );
+
+        // call llm to generate summary of interactions 
+        const prompt = `Given the following contact details, generate a spoken summary that highlights key information:
+            Name: ${bestMatch.name}
+            Company: ${bestMatch.company}
+            Notes: ${newNotes, bestMatch.notes}
 
             for the given query ${query}.
 
@@ -135,6 +165,7 @@ app.post('/queryContact', async (req, res) => {
       }
 });
 
+
 /**
  * Get the n most recent queries 
  */
@@ -149,15 +180,18 @@ app.get('/recentQueries', async (req, res) => {
     }
 });
 
+
+
+
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
 
-
-
-// HELPERS
+// HELPERS ===================================================================================================================
 
 const cosineSimilarity = (vecA, vecB) => {
     const dotProduct = vecA.reduce((acc, val, idx) => acc + val * vecB[idx], 0);
