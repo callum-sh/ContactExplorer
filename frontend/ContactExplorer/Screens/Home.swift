@@ -10,9 +10,14 @@ import SwiftUI
 
 
 struct HomeView: View {
-    @StateObject private var viewModel = GetChatItems()
+    @StateObject private var viewModelChat = GetChats()
+    @StateObject private var viewModel = ContactsViewModel()
+    @ObservedObject private var postQuery = PostQuery()
     
     @State private var activeTab: TabModel = .chat
+    
+    @State private var displayedResponse = ""
+    @State private var showResponse = false
     
     var body: some View {
         
@@ -47,9 +52,15 @@ struct HomeView: View {
                     .padding(.leading, 20)
                     
                     HStack(spacing: 18){
-                        Image("croppedpfp")
-                            .resizable()
-                            .frame(width:50, height:50)
+                        NavigationLink(destination: TasksView()) {
+                            Image(systemName: "bell.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.gray)
+                                .padding(15)
+                                .background(Circle().stroke(.gray))
+                        }
                         
                         Image("croppedpfp")
                             .resizable()
@@ -60,9 +71,20 @@ struct HomeView: View {
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 
-                if activeTab == .chat {
+                if (activeTab == .chat) {
                     Spacer()
                     
+                    // display most recent response from query
+                    if showResponse {
+                        ScrollView {
+                            Text(displayedResponse)
+                                .font(.custom("HelveticaNeue-Light", size: 34))
+                                .frame(width: 362, alignment: .leading)
+                                .padding()
+                                .animation(.easeInOut(duration: 0.05), value: displayedResponse)
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
                     
                     ZStack{
                         // Background rectangle
@@ -72,10 +94,12 @@ struct HomeView: View {
                             .shadow(color: .gray, radius: 5, x: 0, y: 5)
                             .ignoresSafeArea()
                         
-                        MessageField()
-                            .padding(.top, 20)
-                            
-                        
+                        MessageField(onSend: { message in
+                            postQuery.sendQuery(message) { response in
+                                showResponseWithTypingAnimation(response)
+                            }
+                        })
+                        .padding(.top, 20)
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
                 } else {
@@ -87,7 +111,7 @@ struct HomeView: View {
                             // The list of items
                             ScrollView {
                                 VStack(spacing: 12) {
-                                    ForEach(viewModel.chats) { chat in
+                                    ForEach(viewModelChat.chats) { chat in
                                         ChatCardView(chatItem: chat)
                                     }
                                 }
@@ -98,7 +122,34 @@ struct HomeView: View {
                 }
             }
             .onAppear {
-                viewModel.fetchChats()
+                viewModelChat.fetchChats()
+            }
+        }
+//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
+//        .onAppear {
+//            viewModel.fetchContacts()
+//        }
+    }
+    
+    private func showResponseWithTypingAnimation(_ fullText: String) {
+        displayedResponse = ""
+        showResponse = true
+
+        let characters = Array(fullText)
+        var index = 0
+
+        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+            if index < characters.count {
+                displayedResponse.append(characters[index])
+                index += 1
+            } else {
+                timer.invalidate()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    withAnimation {
+                        showResponse = false
+                    }
+                }
             }
         }
     }

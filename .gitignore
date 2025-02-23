@@ -1,0 +1,20 @@
+# macOS system files
+.DS_Store
+
+# Swap and lock files
+*.swp
+*.lock
+
+# Xcode user-specific files
+*.xcuserstate
+*.xcuserdata/
+*.xcscmblueprint
+
+# Xcode derived data
+DerivedData/
+
+# Temporary files
+*.moved-aside
+*.xccheckout
+*.playground*
+
