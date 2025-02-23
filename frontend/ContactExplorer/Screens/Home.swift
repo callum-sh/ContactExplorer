@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+
 struct HomeView: View {
     @StateObject private var viewModel = ContactsViewModel()
     
@@ -59,28 +60,18 @@ struct HomeView: View {
                 
                 ZStack{
                     // Background rectangle
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color(.systemGray6))
-                        .frame(height: 100)
-                        .offset(y:30)
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color.white)
+                        .offset(y:40)
+                        .shadow(color: .gray, radius: 5, x: 0, y: 5)
+                        .ignoresSafeArea()
                     
-                    if isEditing {
-                        TextField("", text: $messageText)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .frame(height: 50)
-                            .padding(.horizontal, 20)
-                            .background(Color.clear)
-                            .foregroundColor(.black)
-                            .offset(y: 30)
-                    } else {
-                        Text("type to chat")
-                            .foregroundColor(.secondary)
-                            .offset(y: 30)
-                            .onTapGesture {
-                                isEditing = true
-                            }
-                    }
+                    MessageField()
+                        .padding(.top, 20)
+                        
+                    
                 }
+                .frame(width:UIScreen.main.bounds.width, height: 120)
             }
         }
 //        UNCOMMENT ONLY IF YOU WANT TO UPLOAD 
