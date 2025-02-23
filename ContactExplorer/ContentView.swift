@@ -20,6 +20,10 @@ struct ContentView: View {
         }
     }
 }
+
+#Preview {
+    ContentView()
+}
             /*
              VStack {
              TextField("Search contacts", text: $searchQuery, onCommit: {
