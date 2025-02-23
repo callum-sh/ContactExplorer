@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F244C79E2D6A64A60059FDD2 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F244C79D2D6A64A60059FDD2 /* Contacts.framework */; };
-		F244C7AC2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */; };
 		F244C7DF2D6AB2AE0059FDD2 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7DE2D6AB2AE0059FDD2 /* MLX */; };
 		F244C7E12D6AB2AE0059FDD2 /* MLXFFT in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E02D6AB2AE0059FDD2 /* MLXFFT */; };
 		F244C7E32D6AB2AE0059FDD2 /* MLXFast in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E22D6AB2AE0059FDD2 /* MLXFast */; };
@@ -40,12 +39,24 @@
 		F244C77F2D6A64650059FDD2 /* ContactExplorerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactExplorerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F244C7892D6A64650059FDD2 /* ContactExplorerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactExplorerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F244C79D2D6A64A60059FDD2 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
-		F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ContactsModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C0C03A1E2D6AEAE300201C0D /* Exceptions for "ContactExplorer" folder in "ContactExplorer" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContactExplorer.xcdatamodeld,
+			);
+			target = F244C7692D6A64630059FDD2 /* ContactExplorer */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F244C76C2D6A64630059FDD2 /* ContactExplorer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C0C03A1E2D6AEAE300201C0D /* Exceptions for "ContactExplorer" folder in "ContactExplorer" target */,
+			);
 			path = ContactExplorer;
 			sourceTree = "<group>";
 		};
@@ -97,7 +108,6 @@
 		F244C7612D6A64630059FDD2 = {
 			isa = PBXGroup;
 			children = (
-				F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */,
 				F244C76C2D6A64630059FDD2 /* ContactExplorer */,
 				F244C7822D6A64650059FDD2 /* ContactExplorerTests */,
 				F244C78C2D6A64650059FDD2 /* ContactExplorerUITests */,
@@ -278,7 +288,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F244C7AC2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,19 +665,6 @@
 			productName = MLXRandom;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */,
-			);
-			currentVersion = F244C7AB2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodel */;
-			path = ContactsModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = F244C7622D6A64630059FDD2 /* Project object */;
 }
