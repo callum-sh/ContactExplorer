@@ -20,9 +20,10 @@ app.get('/', (req, res) => {
  */
 app.post('/embedContact', async (req, res) => {
     const { name, email, company, notes, meta } = req.body;
+    console.log(`embedding contact: ${name}, ${email}, ${company}, ${notes}, ${meta}`);
 
     try {
-        // create embedding using cohere for given contact 
+        // create embedding for given contact 
         const result = await createAndEmbedContact(name, email, company, notes, meta);
         res.json(result);
 
@@ -170,7 +171,7 @@ app.post('/queryContact', async (req, res) => {
  * Get the n most recent queries 
  */
 app.get('/recentQueries', async (req, res) => {
-    const n = req.query.n || 5;
+    const n = req.query.n || 15;
     try {
         const result = await pool.query('SELECT * FROM queries ORDER BY created_at DESC LIMIT $1', [n]);
         res.json(result.rows);

@@ -1,23 +1,18 @@
 //
-//  Home.swift
+//  Contacts.swift
 //  ContactExplorer
 //
-//  Created by Harvin Park on 2/23/25.
+//  Created by callum on 2025-02-23.
 //
 
 import Foundation
 import SwiftUI
 
-
-struct HomeView: View {
-    @StateObject private var viewModel = ContactsViewModel()
-    
-    @State private var isEditing = false
-    @State private var messageText = ""
+struct ContactsView: View {
+    @StateObject private var viewModel = GetChatItems()
     
     var body: some View {
         ZStack {
-            
             //background orb
             Image("orb1")
                 .resizable()
@@ -57,30 +52,27 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                
                 ZStack{
-                    // Background rectangle
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.white)
-                        .offset(y:40)
-                        .shadow(color: .gray, radius: 5, x: 0, y: 5)
-                        .ignoresSafeArea()
-                    
-                    MessageField()
-                        .padding(.top, 20)
-                        
-                    
+                    VStack {
+                        // The list of items
+                        ScrollView {
+                            VStack(spacing: 12) {
+                                ForEach(viewModel.chats) { chat in
+                                    ChatCardView(chatItem: chat)
+                                }
+                            }
+                            .padding(.top, 10)
+                        }
+                    }
                 }
-                .frame(width:UIScreen.main.bounds.width, height: 120)
             }
         }
-//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD 
-//        .onAppear {
-//            viewModel.fetchContacts()
-//        }
+        .onAppear {
+            viewModel.fetchChats()
+        }
     }
 }
 
 #Preview{
-    HomeView()
+    ContactsView()
 }
