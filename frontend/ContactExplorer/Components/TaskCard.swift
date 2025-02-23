@@ -1,5 +1,5 @@
 //
-//  ChatItemCard.swift
+//  TaskCard.swift
 //  ContactExplorer
 //
 //  Created by callum on 2025-02-23.
@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-struct ChatCardView: View {
-    let chatItem: ChatItem
+struct TaskCardView: View {
+    let taskItem: Task
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             
-            // Name + Time
-            Text((chatItem.name ?? "unknonw") + " · " + formattedDate(chatItem.date))
+            // Day
+            Text(formattedDate(taskItem.date))
                 .font(.custom("HelveticaNeue-Light", size: 17))
                 .foregroundColor(.secondary)                
 
-            // Content
-            Text(chatItem.query)
+            // Task Description
+            Text(taskItem.task)
                 .font(.body)
                 .foregroundColor(.primary)
                 .font(.custom("NewYork-Regular", size: 17)) // todo: font not working
@@ -44,11 +44,11 @@ struct ChatCardView: View {
             formatter.timeStyle = .short
             return formatter.string(from: date)
         } else {
-            return "Invalid Date"
+            return "N/A"
         }
     }
 }
 
 #Preview {
-    ContactsView()
+    TasksView()
 }

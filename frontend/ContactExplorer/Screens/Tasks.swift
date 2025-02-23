@@ -1,22 +1,18 @@
 //
-//  Home.swift
+//  Contacts.swift
 //  ContactExplorer
 //
-//  Created by Harvin Park on 2/23/25.
+//  Created by callum on 2025-02-23.
 //
 
 import Foundation
 import SwiftUI
 
-struct HomeView: View {
-    @StateObject private var viewModel = ContactsViewModel()
-    
-    @State private var isEditing = false
-    @State private var messageText = ""
+struct TasksView: View {
+    @StateObject private var viewModel = GetTasks()
     
     var body: some View {
         ZStack {
-            
             //background orb
             Image("orb1")
                 .resizable()
@@ -41,8 +37,8 @@ struct HomeView: View {
                 HStack{
                     Spacer()
                     HStack(spacing: 18){
-                        NavigationLink(destination: TasksView()) {
-                            Image(systemName: "bell.fill")
+                        NavigationLink(destination: HomeView()) {
+                            Image(systemName: "xmark")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
@@ -62,40 +58,27 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                
                 ZStack{
-                    // Background rectangle
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color(.systemGray6))
-                        .frame(height: 100)
-                        .offset(y:30)
-                    
-                    if isEditing {
-                        TextField("", text: $messageText)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .frame(height: 50)
-                            .padding(.horizontal, 20)
-                            .background(Color.clear)
-                            .foregroundColor(.black)
-                            .offset(y: 30)
-                    } else {
-                        Text("type to chat")
-                            .foregroundColor(.secondary)
-                            .offset(y: 30)
-                            .onTapGesture {
-                                isEditing = true
+                    VStack {
+                        // The list of items
+                        ScrollView {
+                            VStack(spacing: 12) {
+                                ForEach(viewModel.tasks) { task in
+                                    TaskCardView(taskItem: task)
+                                }
                             }
+                            .padding(.top, 10)
+                        }
                     }
                 }
             }
         }
-//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
-//        .onAppear {
-//            viewModel.fetchContacts()
-//        }
+        .onAppear {
+            viewModel.fetchChats()
+        }
     }
 }
 
 #Preview{
-    HomeView()
+    TasksView()
 }
