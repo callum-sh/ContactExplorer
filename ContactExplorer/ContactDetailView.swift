@@ -36,6 +36,11 @@ struct ContactDetailView: View {
                         }
                     }
                 }
+                
+                // embedding
+//                Section(header: Text("Embedding")) {
+//                    TextField("Embedding: \(contact.embedding?.map { String($0) }.joined(separator: ", ") ?? "N/A")")
+//                }
             }
             
             // Pulsing green button at the bottom center

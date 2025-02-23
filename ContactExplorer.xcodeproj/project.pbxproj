@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		F244C79E2D6A64A60059FDD2 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F244C79D2D6A64A60059FDD2 /* Contacts.framework */; };
 		F244C7AC2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */; };
+		F244C7DF2D6AB2AE0059FDD2 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7DE2D6AB2AE0059FDD2 /* MLX */; };
+		F244C7E12D6AB2AE0059FDD2 /* MLXFFT in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E02D6AB2AE0059FDD2 /* MLXFFT */; };
+		F244C7E32D6AB2AE0059FDD2 /* MLXFast in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E22D6AB2AE0059FDD2 /* MLXFast */; };
+		F244C7E52D6AB2AE0059FDD2 /* MLXLinalg in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E42D6AB2AE0059FDD2 /* MLXLinalg */; };
+		F244C7E72D6AB2AE0059FDD2 /* MLXNN in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E62D6AB2AE0059FDD2 /* MLXNN */; };
+		F244C7E92D6AB2AE0059FDD2 /* MLXOptimizers in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7E82D6AB2AE0059FDD2 /* MLXOptimizers */; };
+		F244C7EB2D6AB2AE0059FDD2 /* MLXRandom in Frameworks */ = {isa = PBXBuildFile; productRef = F244C7EA2D6AB2AE0059FDD2 /* MLXRandom */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +66,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F244C7E72D6AB2AE0059FDD2 /* MLXNN in Frameworks */,
+				F244C7E52D6AB2AE0059FDD2 /* MLXLinalg in Frameworks */,
+				F244C7DF2D6AB2AE0059FDD2 /* MLX in Frameworks */,
+				F244C7EB2D6AB2AE0059FDD2 /* MLXRandom in Frameworks */,
 				F244C79E2D6A64A60059FDD2 /* Contacts.framework in Frameworks */,
+				F244C7E92D6AB2AE0059FDD2 /* MLXOptimizers in Frameworks */,
+				F244C7E32D6AB2AE0059FDD2 /* MLXFast in Frameworks */,
+				F244C7E12D6AB2AE0059FDD2 /* MLXFFT in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +144,13 @@
 			);
 			name = ContactExplorer;
 			packageProductDependencies = (
+				F244C7DE2D6AB2AE0059FDD2 /* MLX */,
+				F244C7E02D6AB2AE0059FDD2 /* MLXFFT */,
+				F244C7E22D6AB2AE0059FDD2 /* MLXFast */,
+				F244C7E42D6AB2AE0059FDD2 /* MLXLinalg */,
+				F244C7E62D6AB2AE0059FDD2 /* MLXNN */,
+				F244C7E82D6AB2AE0059FDD2 /* MLXOptimizers */,
+				F244C7EA2D6AB2AE0059FDD2 /* MLXRandom */,
 			);
 			productName = ContactExplorer;
 			productReference = F244C76A2D6A64630059FDD2 /* ContactExplorer.app */;
@@ -213,6 +234,9 @@
 			);
 			mainGroup = F244C7612D6A64630059FDD2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F244C76B2D6A64630059FDD2 /* Products */;
 			projectDirPath = "";
@@ -418,7 +442,7 @@
 				DEVELOPMENT_TEAM = 4927QG34AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts so you can edit and add extra information.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts to display them in the app.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to record speech for notes.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to transcribe notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -450,7 +474,7 @@
 				DEVELOPMENT_TEAM = 4927QG34AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts so you can edit and add extra information.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts to display them in the app.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to record speech for notes.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to transcribe notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -583,6 +607,55 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ml-explore/mlx-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.21.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F244C7DE2D6AB2AE0059FDD2 /* MLX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLX;
+		};
+		F244C7E02D6AB2AE0059FDD2 /* MLXFFT */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXFFT;
+		};
+		F244C7E22D6AB2AE0059FDD2 /* MLXFast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXFast;
+		};
+		F244C7E42D6AB2AE0059FDD2 /* MLXLinalg */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXLinalg;
+		};
+		F244C7E62D6AB2AE0059FDD2 /* MLXNN */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXNN;
+		};
+		F244C7E82D6AB2AE0059FDD2 /* MLXOptimizers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXOptimizers;
+		};
+		F244C7EA2D6AB2AE0059FDD2 /* MLXRandom */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F244C7DD2D6AB2AE0059FDD2 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXRandom;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F244C7AA2D6A8D5E0059FDD2 /* ContactsModel.xcdatamodeld */ = {
