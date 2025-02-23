@@ -41,22 +41,9 @@
 		F244C79D2D6A64A60059FDD2 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C0C03A1E2D6AEAE300201C0D /* Exceptions for "ContactExplorer" folder in "ContactExplorer" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				ContactExplorer.xcdatamodeld,
-			);
-			target = F244C7692D6A64630059FDD2 /* ContactExplorer */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F244C76C2D6A64630059FDD2 /* ContactExplorer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C0C03A1E2D6AEAE300201C0D /* Exceptions for "ContactExplorer" folder in "ContactExplorer" target */,
-			);
 			path = ContactExplorer;
 			sourceTree = "<group>";
 		};
