@@ -7,8 +7,8 @@
 
 import Foundation
 
-class GetChatItems: ObservableObject {
-    @Published var chats: [ChatItem] = []
+class GetChats: ObservableObject {
+    @Published var chats: [Chat] = []
     private let apiURL = "https://d486-67-245-209-108.ngrok-free.app/recentQueries"
     
     func fetchChats() {
@@ -26,7 +26,7 @@ class GetChatItems: ObservableObject {
             }
             
             do {
-                let decodedChats = try JSONDecoder().decode([ChatItem].self, from: data)
+                let decodedChats = try JSONDecoder().decode([Chat].self, from: data)
                 
                 // update the UI on the main thread
                 DispatchQueue.main.async {

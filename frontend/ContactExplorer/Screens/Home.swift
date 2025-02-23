@@ -42,9 +42,15 @@ struct HomeView: View {
                 HStack{
                     Spacer()
                     HStack(spacing: 18){
-                        Image("croppedpfp")
-                            .resizable()
-                            .frame(width:50, height:50)
+                        NavigationLink(destination: TasksView()) {
+                            Image(systemName: "bell.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.gray)
+                                .padding(15)
+                                .background(Circle().stroke(.gray))
+                        }
                         
                         Image("croppedpfp")
                             .resizable()
@@ -74,7 +80,7 @@ struct HomeView: View {
                 .frame(width:UIScreen.main.bounds.width, height: 120)
             }
         }
-//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD 
+//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
 //        .onAppear {
 //            viewModel.fetchContacts()
 //        }

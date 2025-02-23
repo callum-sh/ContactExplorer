@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatCardView: View {
-    let chatItem: ChatItem
+    let chatItem: Chat
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {

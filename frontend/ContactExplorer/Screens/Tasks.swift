@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct ContactsView: View {
-    @StateObject private var viewModel = GetChats()
+struct TasksView: View {
+    @StateObject private var viewModel = GetTasks()
     
     var body: some View {
         ZStack {
@@ -37,9 +37,15 @@ struct ContactsView: View {
                 HStack{
                     Spacer()
                     HStack(spacing: 18){
-                        Image("croppedpfp")
-                            .resizable()
-                            .frame(width:50, height:50)
+                        NavigationLink(destination: HomeView()) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.gray)
+                                .padding(15)
+                                .background(Circle().stroke(.gray))
+                        }
                         
                         Image("croppedpfp")
                             .resizable()
@@ -57,8 +63,8 @@ struct ContactsView: View {
                         // The list of items
                         ScrollView {
                             VStack(spacing: 12) {
-                                ForEach(viewModel.chats) { chat in
-                                    ChatCardView(chatItem: chat)
+                                ForEach(viewModel.tasks) { task in
+                                    TaskCardView(taskItem: task)
                                 }
                             }
                             .padding(.top, 10)
@@ -68,11 +74,11 @@ struct ContactsView: View {
             }
         }
         .onAppear {
-            viewModel.fetchChats()
+            viewModel.fetchTasks()
         }
     }
 }
 
 #Preview{
-    ContactsView()
+    TasksView()
 }
