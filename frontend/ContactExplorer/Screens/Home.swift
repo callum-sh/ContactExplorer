@@ -15,6 +15,7 @@ struct HomeView: View {
     @ObservedObject private var postQuery = PostQuery()
     
     @State private var activeTab: TabModel = .chat
+    @State private var showTasksView = false
     
     @State private var displayedResponse = ""
     @State private var showResponse = false
@@ -52,14 +53,15 @@ struct HomeView: View {
                     .padding(.leading, 20)
                     
                     HStack(spacing: 18){
-                        NavigationLink(destination: TasksView()) {
+                        Button(action: {
+                            showTasksView = true
+                        }) {
                             Image(systemName: "bell.fill")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
                                 .foregroundColor(.gray)
                                 .padding(15)
-                                .background(Circle().stroke(.gray))
                         }
                         
                         Image("croppedpfp")
@@ -72,8 +74,8 @@ struct HomeView: View {
                 .frame(width: UIScreen.main.bounds.width)
                 
                 if (activeTab == .chat) {
-                    Spacer()
                     
+                    Spacer()
                     // display most recent response from query
                     if showResponse {
                         ScrollView {
@@ -85,7 +87,9 @@ struct HomeView: View {
                         }
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
+                    Spacer()
                     
+                    // search field at bottom of page
                     ZStack{
                         // Background rectangle
                         RoundedRectangle(cornerRadius: 25)
@@ -102,13 +106,13 @@ struct HomeView: View {
                         .padding(.top, 20)
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
+                    
                 } else {
+                    // display chat logs
                     
                     Spacer()
-                    
                     ZStack{
                         VStack {
-                            // The list of items
                             ScrollView {
                                 VStack(spacing: 12) {
                                     ForEach(viewModelChat.chats) { chat in
@@ -124,6 +128,8 @@ struct HomeView: View {
             .onAppear {
                 viewModelChat.fetchChats()
             }
+        }.fullScreenCover(isPresented: $showTasksView) {
+            TasksView(showTasksView: $showTasksView)
         }
 //        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
 //        .onAppear {

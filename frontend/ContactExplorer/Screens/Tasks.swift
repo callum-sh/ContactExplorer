@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TasksView: View {
     @StateObject private var viewModel = GetTasks()
+    @Binding var showTasksView: Bool
     
     var body: some View {
         ZStack {
@@ -37,14 +38,15 @@ struct TasksView: View {
                 HStack{
                     Spacer()
                     HStack(spacing: 18){
-                        NavigationLink(destination: HomeView()) {
+                        Button(action: {
+                            showTasksView = false
+                        }) {
                             Image(systemName: "xmark")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
                                 .foregroundColor(.gray)
                                 .padding(15)
-                                .background(Circle().stroke(.gray))
                         }
                         
                         Image("croppedpfp")
@@ -80,5 +82,5 @@ struct TasksView: View {
 }
 
 #Preview{
-    TasksView()
+    TasksView(showTasksView: .constant(true))
 }
