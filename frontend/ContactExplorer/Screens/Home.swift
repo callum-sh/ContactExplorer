@@ -117,7 +117,7 @@ struct HomeView: View {
                             isFocused: $isInputFocused,
                             refreshChats: { viewModelChat.fetchChats() }
                         )
-                        .padding(.top, 20)
+                        .padding(.top, 40)
 
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
