@@ -11,15 +11,17 @@ struct MessageField: View {
     @Binding var message: String
     var onSend: (String) -> Void
     @FocusState.Binding var isFocused: Bool
+    var refreshChats: () -> Void
 
     var body: some View {
         HStack {
             CustomTextField(placeholder: Text("or type here to chat"), text: $message, isFocused: $isFocused)
-            
+
             Button {
                 guard !message.isEmpty else { return }
                 onSend(message)
                 message = ""
+                refreshChats()
             } label: {
                 Image(systemName: "paperplane.fill")
                     .foregroundColor(.white)
@@ -32,6 +34,7 @@ struct MessageField: View {
         .padding(10)
     }
 }
+
 
 struct CustomTextField: View {
     var placeholder: Text

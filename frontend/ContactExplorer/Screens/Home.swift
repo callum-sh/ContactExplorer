@@ -105,11 +105,18 @@ struct HomeView: View {
                             .ignoresSafeArea()
                         
                         //text field
-                        MessageField(message: $messageText, onSend: { message in
-                            postQuery.sendQuery(message) { response in
-                                showResponseWithTypingAnimation(response)
-                            }
-                        }, isFocused: $isInputFocused)
+                        MessageField(
+                            message: $messageText,
+                            onSend: { message in
+                                postQuery.sendQuery(message) { response in
+                                    DispatchQueue.main.async {
+                                        self.showResponseWithTypingAnimation(response)
+                                    }
+                                }
+                            },
+                            isFocused: $isInputFocused,
+                            refreshChats: { viewModelChat.fetchChats() }
+                        )
                         .padding(.top, 20)
 
                     }
