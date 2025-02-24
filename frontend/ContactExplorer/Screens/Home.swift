@@ -19,6 +19,8 @@ struct HomeView: View {
     @State private var displayedResponse = ""
     @State private var showResponse = false
     
+    @State private var keyboardHeight: CGFloat = 0
+    
     var body: some View {
         
         ZStack {
@@ -102,6 +104,9 @@ struct HomeView: View {
                         .padding(.top, 20)
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
+                    .offset(y: -keyboardHeight)
+                    .animation(.easeOut(duration: 0.25), value: keyboardHeight)
+                    
                 } else {
                     
                     Spacer()
@@ -121,15 +126,40 @@ struct HomeView: View {
                     }
                 }
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             .onAppear {
                 viewModelChat.fetchChats()
+                setupKeyboardNotifications()
+            }
+            .onDisappear {
+                removeKeyboardNotifications()
             }
         }
-//        UNCOMMENT ONLY IF YOU WANT TO UPLOAD
-//        .onAppear {
-//            viewModel.fetchContacts()
-//        }
     }
+    
+    //Keyboard Handling
+    
+    private func setupKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+            keyboardHeight = keyboardFrame.height - 40 // Adjust for the bottom safe area if needed
+            print(keyboardHeight)
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+            keyboardHeight = 0
+            print(keyboardHeight)
+        }
+    }
+    
+    private func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    
+    
+    
     
     private func showResponseWithTypingAnimation(_ fullText: String) {
         displayedResponse = ""
