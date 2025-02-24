@@ -29,8 +29,6 @@ struct MessageField: View {
         }
         .padding(.horizontal)
         .padding(10)
-        .background(Color("Gray"))
-        .cornerRadius(20)
     }
 }
 
