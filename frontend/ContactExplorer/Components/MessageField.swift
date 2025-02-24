@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct MessageField: View {
-    @State private var message = ""
+    @Binding var message: String
     var onSend: (String) -> Void
-    @FocusState.Binding var isFocused: Bool // Use Binding instead of trying to assign
+    @FocusState.Binding var isFocused: Bool
 
     var body: some View {
         HStack {
             CustomTextField(placeholder: Text("or type here to chat"), text: $message, isFocused: $isFocused)
-                        
+            
             Button {
                 guard !message.isEmpty else { return }
                 onSend(message)

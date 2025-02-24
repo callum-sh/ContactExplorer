@@ -1,15 +1,26 @@
 import Foundation
 import SwiftUI
+import Speech
+import AVFoundation
+
 
 struct HomeView: View {
     @StateObject private var viewModelChat = GetChats()
     @StateObject private var viewModel = ContactsViewModel()
     @ObservedObject private var postQuery = PostQuery()
     
+    @State private var isListening = false
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+    @State private var audioEngine = AVAudioEngine()
+    @State private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    @State private var recognitionTask: SFSpeechRecognitionTask?
+    
+    
     @State private var activeTab: TabModel = .chat
     @State private var showTasksView = false
     
     @State private var displayedResponse = ""
+    @State private var messageText = ""
     @State private var showResponse = false
     
     @State private var keyboardHeight: CGFloat = 0
@@ -19,15 +30,15 @@ struct HomeView: View {
     
     var body: some View {
         ZStack {
-            
             //background orb
             Image("orb1")
                 .resizable()
                 .frame(width: 750, height: 750)
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
-                .blur(radius: 5)
-                .offset(x:150, y:-10)
+                .blur(radius: isListening ? 0 : 5)
+                .offset(x: 150, y: -10)
+                .animation(.easeInOut(duration: 0.3), value: isListening)
             
             // Overlay layer
             Rectangle()
@@ -94,11 +105,11 @@ struct HomeView: View {
                             .ignoresSafeArea()
                         
                         //text field
-                        MessageField(onSend: { message in
+                        MessageField(message: $messageText, onSend: { message in
                             postQuery.sendQuery(message) { response in
                                 showResponseWithTypingAnimation(response)
                             }
-                        }, isFocused: $isInputFocused) // Pass focus state binding
+                        }, isFocused: $isInputFocused)
                         .padding(.top, 20)
 
                     }
@@ -134,19 +145,46 @@ struct HomeView: View {
         }
         .onTapGesture {
             isInputFocused = false
-            print(isInputFocused)
         }
         .fullScreenCover(isPresented: $showTasksView) {
             TasksView(showTasksView: $showTasksView)
         }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    if (activeTab == .chat) {
+                        withAnimation {
+                            if !isListening {
+                                SFSpeechRecognizer.requestAuthorization { authStatus in
+                                    DispatchQueue.main.async {
+                                        if authStatus == .authorized {
+                                            self.startSpeechRecognition()
+                                            self.isListening = true
+                                        } else {
+                                            print("Speech recognition not authorized")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .onEnded { _ in
+                    if (activeTab == .chat) {
+                        withAnimation {
+                            self.isListening = false
+                            self.stopSpeechRecognition()
+                        }
+                    }
+                }
+        )
     }
     
     //Keyboard Handling
     private func setupKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
             guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-            keyboardHeight = keyboardFrame.height - 40 // Adjust for the bottom safe area if needed
-            print(isInputFocused)
+            keyboardHeight = keyboardFrame.height - 40
         }
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
@@ -180,6 +218,66 @@ struct HomeView: View {
                 }
             }
         }
+    }
+    
+    private func startSpeechRecognition() {
+        // Cancel any existing task
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        
+        // Set up audio session
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Audio session setup failed: \(error)")
+            return
+        }
+        
+        // Prepare audio engine
+        let inputNode = audioEngine.inputNode
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.removeTap(onBus: 0) // Remove any existing tap
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        do {
+            try audioEngine.start()
+        } catch {
+            print("Audio engine start failed: \(error)")
+            return
+        }
+        
+        // Create recognition request
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        guard let recognitionRequest = recognitionRequest else { return }
+        
+        // Start recognition task
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { result, error in
+            if let result = result {
+                DispatchQueue.main.async {
+                    // Update messageText with recognized text
+                    self.messageText = result.bestTranscription.formattedString
+                }
+            }
+            if error != nil || result?.isFinal == true {
+                self.stopSpeechRecognition()
+                self.isListening = false
+            }
+        }
+    }
+        
+    /// Stops the speech recognition process and cleans up
+    private func stopSpeechRecognition() {
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+        recognitionRequest?.endAudio()
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        try? AVAudioSession.sharedInstance().setActive(false)
     }
 }
 
