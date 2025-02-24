@@ -1,13 +1,5 @@
-//
-//  Home.swift
-//  ContactExplorer
-//
-//  Created by Harvin Park on 2/23/25.
-//
-
 import Foundation
 import SwiftUI
-
 
 struct HomeView: View {
     @StateObject private var viewModelChat = GetChats()
@@ -22,8 +14,10 @@ struct HomeView: View {
     
     @State private var keyboardHeight: CGFloat = 0
     
+    // Add FocusState to handle keyboard
+    @FocusState private var isInputFocused: Bool
+    
     var body: some View {
-        
         ZStack {
             
             //background orb
@@ -34,7 +28,6 @@ struct HomeView: View {
                 .ignoresSafeArea()
                 .blur(radius: 5)
                 .offset(x:150, y:-10)
-            
             
             // Overlay layer
             Rectangle()
@@ -75,8 +68,8 @@ struct HomeView: View {
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 
+                //main chat interface
                 if (activeTab == .chat) {
-                    
                     Spacer()
                     // display most recent response from query
                     if showResponse {
@@ -91,29 +84,30 @@ struct HomeView: View {
                     }
                     Spacer()
                     
-                    // search field at bottom of page
+                    // chat field at bottom of page
                     ZStack{
-                        // Background rectangle
+                        // background rectangle
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color.white)
                             .offset(y:40)
                             .shadow(color: .gray, radius: 5, x: 0, y: 5)
                             .ignoresSafeArea()
                         
+                        //text field
                         MessageField(onSend: { message in
                             postQuery.sendQuery(message) { response in
                                 showResponseWithTypingAnimation(response)
                             }
-                        })
+                        }, isFocused: $isInputFocused) // Pass focus state binding
                         .padding(.top, 20)
+
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
                     .offset(y: -keyboardHeight)
                     .animation(.easeOut(duration: 0.25), value: keyboardHeight)
                     
                 } else {
-                    // display chat logs
-                    
+                    // display recent chat logs
                     Spacer()
                     ZStack{
                         VStack {
@@ -137,17 +131,22 @@ struct HomeView: View {
             .onDisappear {
                 removeKeyboardNotifications()
             }
-        }.fullScreenCover(isPresented: $showTasksView) {
+        }
+        .onTapGesture {
+            isInputFocused = false
+            print(isInputFocused)
+        }
+        .fullScreenCover(isPresented: $showTasksView) {
             TasksView(showTasksView: $showTasksView)
         }
     }
     
     //Keyboard Handling
-    
     private func setupKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
             guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
             keyboardHeight = keyboardFrame.height - 40 // Adjust for the bottom safe area if needed
+            print(isInputFocused)
         }
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
@@ -159,10 +158,6 @@ struct HomeView: View {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
-    
-    
-    
     
     private func showResponseWithTypingAnimation(_ fullText: String) {
         displayedResponse = ""
@@ -188,6 +183,6 @@ struct HomeView: View {
     }
 }
 
-#Preview{
+#Preview {
     HomeView()
 }
