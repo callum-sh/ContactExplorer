@@ -21,12 +21,13 @@ struct MessageField: View {
                 onSend(message)
                 message = ""
             } label: {
-                Image(systemName: "paperplane.fill")
+                Image(systemName: "arrow.up")
                     .foregroundColor(.white)
                     .padding(10)
                     .background(Color(.gray))
                     .cornerRadius(10)
             }
+            .offset(y: -40)
         }
         .padding(.horizontal)
         .padding(10)
@@ -43,7 +44,7 @@ struct CustomTextField: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            if text.isEmpty {
+            if text.isEmpty{
                 placeholder
                     .opacity(0.5)
             }
@@ -51,6 +52,16 @@ struct CustomTextField: View {
             TextField("", text: $text, onEditingChanged: editingChanged, onCommit: commit)
                 .focused($isFocused) // Apply FocusState binding
         }
+        .padding()
+        .padding(.bottom, 80)
+        .background(
+            Rectangle()
+                .fill(Color.clear)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isFocused = true
+                }
+        )
     }
 }
 

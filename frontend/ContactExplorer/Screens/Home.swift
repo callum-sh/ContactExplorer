@@ -99,11 +99,11 @@ struct HomeView: View {
                                 showResponseWithTypingAnimation(response)
                             }
                         }, isFocused: $isInputFocused) // Pass focus state binding
-                        .padding(.top, 20)
+                        .padding(.top, 40)
 
                     }
                     .frame(width:UIScreen.main.bounds.width, height: 120)
-                    .offset(y: -keyboardHeight)
+                    .offset(y: -keyboardHeight + 40)
                     .animation(.easeOut(duration: 0.25), value: keyboardHeight)
                     
                 } else {
